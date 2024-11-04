@@ -3,7 +3,7 @@
 # nanobind11_json
 `nanobind11_json` is an `nlohmann::json` to `nanobind` bridge, it allows you to automatically convert `nlohmann::json` to `py::object` and the other way around. Simply include the header, and the automatic conversion will be enabled.
 
-This library is derived from that of `pybind11_json` and therefore follows the same BSD license, even though the first round of translations were from a U.S. government employee.
+This library is derived from that of `pybind11_json` and therefore follows the same BSD license. Contributions and translations were made by a Federal employee and are not subject to US Copyright protection.
 
 ## Warnings
 

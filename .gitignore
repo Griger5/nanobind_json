@@ -1,0 +1,4 @@
+build/*
+.pixi
+bld
+.DS_Store

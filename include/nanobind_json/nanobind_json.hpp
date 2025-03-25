@@ -9,11 +9,10 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
-#include "nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
-#include "nanobind/nanobind.hpp"
+#include <nanobind/nanobind.h>
 
 namespace nb = nanobind;
 namespace nl = nlohmann;
@@ -40,7 +39,7 @@ namespace pyjson
         }
         else if (j.is_string())
         {
-            return nb::str(j.get<std::string>());
+            return nb::str(j.get<std::string>().c_str());
         }
         else if (j.is_array())
         {
@@ -56,7 +55,7 @@ namespace pyjson
             nb::dict obj;
             for (nl::json::const_iterator it = j.cbegin(); it != j.cend(); ++it)
             {
-                obj[nb::str(it.key())] = from_json(it.value());
+                obj[nb::str(it.key().c_str())] = from_json(it.value());
             }
             return std::move(obj);
         }
@@ -70,24 +69,24 @@ namespace pyjson
         }
         if (nb::isinstance<nb::bool_>(obj))
         {
-            return obj.cast<bool>();
+            return nb::cast<bool>(obj);
         }
         if (nb::isinstance<nb::int_>(obj))
         {
-            return obj.cast<long>();
+            return nb::cast<long>(obj);
         }
         if (nb::isinstance<nb::float_>(obj))
-        {
-            return obj.cast<double>();
-        }
+        
+            return nb::cast<double>(obj);
+        
         if (nb::isinstance<nb::bytes>(obj))
         {
-            nb::module base64 = nb::module::import("base64");
-            return base64.attr("b64encode")(obj).attr("decode")("utf-8").cast<std::string>();
+            nb::module_ base64 = nb::module_::import_("base64");
+            return nb::cast<std::string>(base64.attr("b64encode")(obj).attr("decode")("utf-8"));
         }
         if (nb::isinstance<nb::str>(obj))
         {
-            return obj.cast<std::string>();
+            return nb::cast<std::string>(obj);
         }
         if (nb::isinstance<nb::tuple>(obj) || nb::isinstance<nb::list>(obj))
         {
@@ -103,11 +102,11 @@ namespace pyjson
             auto out = nl::json::object();
             for (const nb::handle key : obj)
             {
-                out[nb::str(key).cast<std::string>()] = to_json(obj[key]);
+                out[nb::cast<std::string>(nb::str(key))] = to_json(obj[key]);
             }
             return out;
         }
-        throw std::runtime_error("to_json not implemented for this type of object: " + nb::repr(obj).cast<std::string>());
+        throw std::runtime_error("to_json not implemented for this type of object: " + nb::cast<std::string>(nb::repr(obj)));
     }
 }
 
@@ -125,7 +124,7 @@ namespace nlohmann
                                                            \
         inline static T from_json(const json& j)           \
         {                                                  \
-            return pyjson::from_json(j);                   \
+            return nb::cast<T>(pyjson::from_json(j));                   \
         }                                                  \
     };
 
@@ -151,14 +150,14 @@ namespace nlohmann
     MAKE_NLJSON_SERIALIZER_DESERIALIZER(nb::dict);
 
     MAKE_NLJSON_SERIALIZER_ONLY(nb::handle);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::item_accessor);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::list_accessor);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::tuple_accessor);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::sequence_accessor);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::str_attr_accessor);
-    MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::obj_attr_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::item_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::list_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::tuple_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::sequence_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::str_attr_accessor);
+    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::obj_attr_accessor);
 
-    #undef MAKE_NLJSON_SERIALIZER
+    #undef MAKE_NLJSON_SERIALIZER_DESERIALIZER
     #undef MAKE_NLJSON_SERIALIZER_ONLY
 }
 
@@ -167,15 +166,16 @@ namespace nanobind
 {
     namespace detail
     {
-        template <> struct type_caster<nl::json>
+        template <> struct  type_caster<nl::json>
         {
         public:
-            NANOBIND_TYPE_CASTER(nl::json, _("json"));
+            static constexpr auto Name =
+                const_name("JSON");
 
-            bool load(handle src, bool)
+            bool from_python(handle src, bool)
             {
                 try {
-                    value = pyjson::to_json(src);
+                    auto value = pyjson::to_json(src);
                     return true;
                 }
                 catch (...)
@@ -184,7 +184,7 @@ namespace nanobind
                 }
             }
 
-            static handle cast(nl::json src, return_value_policy /* policy */, handle /* parent */)
+            static handle from_cpp(nl::json src, rv_policy /* policy */, cleanup_list* /* parent */)
             {
                 object obj = pyjson::from_json(src);
                 return obj.release();

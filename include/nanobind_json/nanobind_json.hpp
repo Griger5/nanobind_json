@@ -13,7 +13,7 @@
 
 #include "nlohmann/json.hpp"
 
-#include "nanobind/nanobind.hpp"
+#include "nanobind/nanobind.h"
 
 namespace nb = nanobind;
 namespace nl = nlohmann;

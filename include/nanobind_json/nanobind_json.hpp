@@ -122,7 +122,7 @@ namespace pyjson
             }
             return out;
         }
-        throw std::runtime_error("to_json not implemented for this type of object: " + nb::repr(obj).cast<std::string>());
+        throw std::runtime_error("to_json not implemented for this type of object: " + nb::cast<std::string>(nb::repr(obj)));
     }
 }
 

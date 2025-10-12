@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright (c) 2019, Martin Renou                                         *
+* Copyright (c) 2019, Martin Renou, Ian Bell, Gracjan Adamus               *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -187,7 +187,6 @@ public:
         return obj.release();
     }
 };
-
 
 NAMESPACE_END(detail)
 NAMESPACE_END(NB_NAMESPACE)

@@ -39,7 +39,7 @@ include(GNUInstallDirs)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
 set(NANOBIND_JSON_HEADERS
-    include/nanobind_json/nanobind_json.hpp
+    include/nanobind_json/nanobind_json.h
 )
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -61,17 +61,6 @@ endif()
 #########
 # Tests #
 #########
-
-OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
-OPTION(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
-
-if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    set(BUILD_TESTS ON)
-endif()
-
-if(BUILD_TESTS)
-    add_subdirectory(test)
-endif()
 
 ################
 # Installation #

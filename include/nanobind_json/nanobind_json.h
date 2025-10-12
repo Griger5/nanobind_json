@@ -124,7 +124,7 @@ namespace nlohmann
                                                            \
         inline static T from_json(const json& j)           \
         {                                                  \
-            return nb::cast<T>(pyjson::from_json(j));                   \
+            return nb::cast<T>(pyjson::from_json(j));      \
         }                                                  \
     };
 
@@ -161,34 +161,33 @@ namespace nlohmann
     #undef MAKE_NLJSON_SERIALIZER_ONLY
 }
 
+NAMESPACE_BEGIN(NB_NAMESPACE)
+NAMESPACE_BEGIN(detail)
+
 // nanobind caster
-namespace nanobind
-{
-    namespace detail
+template <> struct type_caster<nl::json> {
+public:
+    NB_TYPE_CASTER(nl::json, const_name("[") + const_name("JSON") +const_name("]"));
+
+    bool from_python(handle src, bool)
     {
-        template <> struct  type_caster<nl::json>
+        try {
+            auto value = pyjson::to_json(src);
+            return true;
+        }
+        catch (...)
         {
-        public:
-            static constexpr auto Name =
-                const_name("JSON");
-
-            bool from_python(handle src, bool)
-            {
-                try {
-                    auto value = pyjson::to_json(src);
-                    return true;
-                }
-                catch (...)
-                {
-                    return false;
-                }
-            }
-
-            static handle from_cpp(nl::json src, rv_policy /* policy */, cleanup_list* /* parent */)
-            {
-                object obj = pyjson::from_json(src);
-                return obj.release();
-            }
-        };
+            return false;
+        }
     }
-}
+
+    static handle from_cpp(nl::json src, rv_policy /* policy */, cleanup_list* /* parent */)
+    {
+        object obj = pyjson::from_json(src);
+        return obj.release();
+    }
+};
+
+
+NAMESPACE_END(detail)
+NAMESPACE_END(NB_NAMESPACE)

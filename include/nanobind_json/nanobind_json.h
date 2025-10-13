@@ -169,8 +169,7 @@ template <> struct type_caster<nl::json> {
 public:
     NB_TYPE_CASTER(nl::json, const_name("[") + const_name("JSON") +const_name("]"));
 
-    bool from_python(handle src, bool)
-    {
+    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {
             auto value = pyjson::to_json(src);
             return true;
@@ -181,8 +180,7 @@ public:
         }
     }
 
-    static handle from_cpp(nl::json src, rv_policy /* policy */, cleanup_list* /* parent */)
-    {
+    static handle from_cpp(nl::json src, rv_policy policy, cleanup_list *cleanup) {
         object obj = pyjson::from_json(src);
         return obj.release();
     }

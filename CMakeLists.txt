@@ -19,12 +19,20 @@ set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_V
 # Dependencies #
 ################
 
+include(FetchContent)
+        FetchContent_Declare(
+        nanobind
+        GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+)
+
+FetchContent_MakeAvailable(nanobind)
+
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 
 if (NOT TARGET nanobind::headers)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
-find_package(nanobind ${nanobind_REQUIRED_VERSION} REQUIRED)
+# find_package(nanobind CONFIG REQUIRED)
 endif()
 if (NOT TARGET nlohmann_json)
 find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
@@ -61,6 +69,13 @@ endif()
 #########
 # Tests #
 #########
+
+OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
+
+if(BUILD_TESTS)
+        include_directories(include)
+        nanobind_add_module(test_json_ext test/test_json.cpp STABLE_ABI)
+endif()
 
 ################
 # Installation #

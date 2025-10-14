@@ -39,10 +39,10 @@ jobs:
     #     curl -L -o vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
     #     ./vc_redist.x64.exe /install /quiet /norestart
 
-    - name: Set environment
-      run: |
-        export PATH=$PWD/build/Release:$PATH
-        export PYTHONPATH=$PWD/build/Release
+    # - name: Set environment
+    #   run: |
+    #     export PATH=$PWD/build/Release:$PATH
+    #     export PYTHONPATH=$PWD/build/Release
 
     - name: Install pytest
       run: python -m pip install pytest

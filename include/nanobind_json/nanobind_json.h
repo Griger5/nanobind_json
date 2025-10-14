@@ -19,7 +19,7 @@ namespace nl = nlohmann;
 
 namespace pyjson
 {
-    inline nb::object from_json(const nl::json& j)
+    inline nb::handle from_json(const nl::json &j)
     {
         if (j.is_null())
         {
@@ -61,7 +61,7 @@ namespace pyjson
         }
     }
 
-    inline nl::json to_json(const nb::handle& obj)
+    inline nl::json to_json(const nb::handle &obj)
     {
         if (obj.ptr() == nullptr || obj.is_none())
         {
@@ -115,25 +115,20 @@ namespace nlohmann
 {
     #define MAKE_NLJSON_SERIALIZER_DESERIALIZER(T)         \
     template <>                                            \
-    struct adl_serializer<T>                               \
-    {                                                      \
-        inline static void to_json(json& j, const T& obj)  \
-        {                                                  \
+    struct adl_serializer<T> {                             \
+        inline static void to_json(json &j, const T &obj) {\
             j = pyjson::to_json(obj);                      \
         }                                                  \
                                                            \
-        inline static T from_json(const json& j)           \
-        {                                                  \
+        inline static T from_json(const json &j) {         \
             return nb::cast<T>(pyjson::from_json(j));      \
         }                                                  \
     };
 
     #define MAKE_NLJSON_SERIALIZER_ONLY(T)                 \
     template <>                                            \
-    struct adl_serializer<T>                               \
-    {                                                      \
-        inline static void to_json(json& j, const T& obj)  \
-        {                                                  \
+    struct adl_serializer<T> {                             \
+        inline static void to_json(json &j, const T &obj) {\
             j = pyjson::to_json(obj);                      \
         }                                                  \
     };
@@ -167,11 +162,11 @@ NAMESPACE_BEGIN(detail)
 // nanobind caster
 template <> struct type_caster<nl::json> {
 public:
-    NB_TYPE_CASTER(nl::json, const_name("[") + const_name("JSON") +const_name("]"));
+    NB_TYPE_CASTER(nl::json, const_name("JSON"));
 
-    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
+    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) noexcept {
         try {
-            auto value = pyjson::to_json(src);
+            value = pyjson::to_json(src);
             return true;
         }
         catch (...)
@@ -180,9 +175,9 @@ public:
         }
     }
 
-    static handle from_cpp(nl::json src, rv_policy policy, cleanup_list *cleanup) {
-        object obj = pyjson::from_json(src);
-        return obj.release();
+    static handle from_cpp(const nl::json &src, rv_policy policy, cleanup_list *cleanup) noexcept {
+        handle obj = pyjson::from_json(src);
+        return obj;
     }
 };
 

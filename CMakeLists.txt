@@ -31,8 +31,10 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/nlohmann/json.git
 )
 
-FetchContent_MakeAvailable(nanobind)
-FetchContent_MakeAvailable(nlohmann_json)
+FetchContent_MakeAvailable(nanobind nlohmann_json)
+
+add_library (nlohmann_json)
+target_include_directories(nlohmann_json PUBLIC "${CMAKE_CURRENT_LIST_DIR}/include")
 
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)

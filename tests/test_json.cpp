@@ -7,16 +7,7 @@
 ****************************************************************************/
 
 #include <nanobind/nanobind.h>
-#include <nanobind/stl/string.h>
-#include "nanobind/stl/complex.h"
-#include "nanobind/stl/vector.h"
-#include "nanobind/stl/string.h"
-#include "nanobind/stl/shared_ptr.h"
-#include "nanobind/stl/tuple.h"
-#include "nanobind/stl/detail/nb_optional.h"
-#include "nanobind/ndarray.h"
-#include <nlohmann/json.hpp>
-#include "../include/nanobind_json/nanobind_json.h"
+#include "nanobind_json/nanobind_json.h"
 
 #include <iostream>
 

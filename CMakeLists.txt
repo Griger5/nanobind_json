@@ -35,7 +35,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nanobind nlohmann_json)
 
-include_directories(_deps/nlohmann_json-src/include)
+include_directories(build/_deps/nlohmann_json-src/include)
 
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)

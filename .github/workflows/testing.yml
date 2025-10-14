@@ -42,7 +42,7 @@ jobs:
 
     - name: Build test modules
       run: |
-        cmake --build $GITHUB_WORKSPACE/build/
+        cmake --build $GITHUB_WORKSPACE/build/ --config Release
         ls
         ls build
 

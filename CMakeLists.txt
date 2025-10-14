@@ -84,6 +84,8 @@ if(BUILD_TESTS)
         include_directories(include)
         set(CMAKE_GENERATOR_PLATFORM x64)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+        set(CMAKE_BUILD_TYPE Release)  # Jeśli używasz single-config generatora
+        set(CMAKE_CONFIGURATION_TYPES Release) 
         nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
 endif()
 

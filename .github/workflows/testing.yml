@@ -34,6 +34,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
 
+    - name: Install VC Redistributable
+      run: |
+        curl -L -o vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
+        ./vc_redist.x64.exe /install /quiet /norestart
+
     - name: Install pytest
       run: python -m pip install pytest
     

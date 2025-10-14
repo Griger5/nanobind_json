@@ -83,6 +83,7 @@ OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 if(BUILD_TESTS)
         include_directories(include)
         nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
+        nanobind_install_runtime_dlls(test_json_ext)
 endif()
 
 ################

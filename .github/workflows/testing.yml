@@ -16,7 +16,7 @@ on:
 
 jobs:
   run_tests:
-    name: Build and run tests on ${{ matrix.os }}
+    name: Build and run tests on ${{ matrix.os }} with Python${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -28,10 +28,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Python ${{ matrix.python }}
+    - name: Setup Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python }}
+        python-version: ${{ matrix.python-version }}
         cache: 'pip'
 
     - name: Install pytest

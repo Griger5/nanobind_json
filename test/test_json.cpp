@@ -8,6 +8,13 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
+#include "nanobind/stl/complex.h"
+#include "nanobind/stl/vector.h"
+#include "nanobind/stl/string.h"
+#include "nanobind/stl/shared_ptr.h"
+#include "nanobind/stl/tuple.h"
+#include "nanobind/stl/detail/nb_optional.h"
+#include "nanobind/ndarray.h"
 #include <nlohmann/json.hpp>
 #include "../include/nanobind_json/nanobind_json.h"
 
@@ -23,8 +30,7 @@ NB_MODULE(test_json_ext, m) {
         return "false"_json;
     });
 
-    m.def("nljson_bool_tojson", [](nb::bool_ bool_) {
-        nl::json bool_json = bool_;
+    m.def("nljson_bool_tojson", [](nl::json bool_json) {
         if (!bool_json.is_boolean()) {
             fail();
         }

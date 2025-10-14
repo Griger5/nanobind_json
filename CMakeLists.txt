@@ -24,16 +24,18 @@ include(FetchContent)
 FetchContent_Declare(
         nanobind
         GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+        GIT_TAG master
 )
 
 FetchContent_Declare(
         nlohmann_json
         GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG master
 )
 
 FetchContent_MakeAvailable(nanobind nlohmann_json)
 
-target_include_directories(nlohmann_json INTERFACE "${CMAKE_CURRENT_LIST_DIR}/include")
+include_directories(_deps/nlohmann_json-src/include)
 
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)

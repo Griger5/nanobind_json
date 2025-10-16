@@ -40,11 +40,11 @@ include_directories(build/_deps/nlohmann_json-src/include)
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 
-if (NOT TARGET nanobind::headers)
+# if (NOT TARGET nanobind::headers)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
-endif()
-if (NOT TARGET nlohmann_json)
-endif()
+# endif()
+# if (NOT TARGET nlohmann_json)
+# endif()
 
 ##########
 # Target #

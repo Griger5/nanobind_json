@@ -32,6 +32,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        check-latest: false
 
     - name: Install pytest
       run: python -m pip install pytest

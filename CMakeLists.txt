@@ -6,7 +6,7 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 project(nanobind_json)
 
 set(NANOBIND_JSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -18,6 +18,8 @@ set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_V
 ################
 # Dependencies #
 ################
+
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
 include(FetchContent)
         
@@ -41,7 +43,7 @@ set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 
 # if (NOT TARGET nanobind::headers)
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+# find_package(Python COMPONENTS Interpreter Development REQUIRED)
 # endif()
 # if (NOT TARGET nlohmann_json)
 # endif()

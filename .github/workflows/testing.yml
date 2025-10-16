@@ -16,22 +16,22 @@ on:
 
 jobs:
   run_tests:
-    name: Build and run tests on ${{ matrix.os }} with Python${{ matrix.python-version }}
+    name: Build and run tests on ${{ matrix.os }} with Python${{ matrix.python }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
-        python-version: ["3.9", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Python ${{ matrix.python-version }}
+    - name: Setup Python ${{ matrix.python }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python }}
         check-latest: false
 
     - name: Install pytest
@@ -42,14 +42,17 @@ jobs:
 
     - name: Build test modules
       run: |
-        cmake --build $GITHUB_WORKSPACE/build/ --config Release
-        ls
-        ls build
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+        cmake --build $GITHUB_WORKSPACE/build/
 
     - name: Run tests
+      if: ${{ !startsWith(matrix.os, "windows") }}
       run: |
-        cd build/Release
+        cd build/
+        python -m pytest ../tests
+
+    # TODO: Run on other Python versions on Windows (Missing/not-matching DLLs error)
+    - name: Run tests
+      if: ${{ !startsWith(matrix.os, "windows") }} && matrix.python == "3.13"
+      run: |
+        cd build/Debug
         python -m pytest ../../tests

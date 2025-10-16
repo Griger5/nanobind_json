@@ -60,9 +60,6 @@ set(NANOBIND_JSON_HEADERS
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-find_package(PythonLibs 3)
-include_directories(${PYTHON_INCLUDE_DIRS})
-
 target_include_directories(${PROJECT_NAME}
                            INTERFACE
                            ${PYTHON_INCLUDE_DIRS}
@@ -86,7 +83,7 @@ OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 if(BUILD_TESTS)
         include_directories(include)
         nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
-        target_link_libraries(${PROJECT_NAME})
+        target_link_libraries(test_json_ext ${PROJECT_NAME})
 endif()
 
 ################

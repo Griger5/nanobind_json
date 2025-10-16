@@ -52,7 +52,7 @@ jobs:
 
     # TODO: Run on other Python versions on Windows (Missing/not-matching DLLs error)
     - name: Run tests
-      if: ${{ startsWith(matrix.os, 'windows') }} && matrix.python == "3.13"
+      if: ${{ startsWith(matrix.os, 'windows') && matrix.python == "3.13" }}
       run: |
         cd build/Debug
         python -m pytest ../../tests

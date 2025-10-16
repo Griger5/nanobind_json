@@ -83,7 +83,7 @@ OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 if(BUILD_TESTS)
         include_directories(include)
         nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
-        target_link_libraries(test_json_ext ${PROJECT_NAME})
+        target_link_libraries(test_json_ext PRIVATE ${PROJECT_NAME})
 endif()
 
 ################

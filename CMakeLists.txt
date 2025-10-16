@@ -60,6 +60,9 @@ set(NANOBIND_JSON_HEADERS
 
 add_library(${PROJECT_NAME} INTERFACE)
 
+find_package(PythonLibs 3)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
 target_include_directories(${PROJECT_NAME}
                            INTERFACE
                            ${PYTHON_INCLUDE_DIRS}

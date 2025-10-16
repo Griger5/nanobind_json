@@ -85,7 +85,6 @@ set(NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/cmake/${
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}-targets
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-endif()
 
 # Makes the project importable from the build directory
 export(EXPORT ${PROJECT_NAME}-targets

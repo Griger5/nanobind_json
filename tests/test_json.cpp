@@ -9,8 +9,6 @@
 #include <nanobind/nanobind.h>
 #include "nanobind_json/nanobind_json.h"
 
-#include <iostream>
-
 namespace nb = nanobind;
 namespace nl = nlohmann;
 

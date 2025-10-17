@@ -24,15 +24,15 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
 include(FetchContent)
         
 FetchContent_Declare(
-        nanobind
-        GIT_REPOSITORY https://github.com/wjakob/nanobind.git
-        GIT_TAG master
+    nanobind
+    GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+    GIT_TAG master
 )
 
 FetchContent_Declare(
-        nlohmann_json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG master
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG master
 )
 
 FetchContent_MakeAvailable(nanobind nlohmann_json)
@@ -53,11 +53,13 @@ set(NANOBIND_JSON_HEADERS
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-target_include_directories(${PROJECT_NAME}
-                           INTERFACE
-                           ${PYTHON_INCLUDE_DIRS}
-                           $<BUILD_INTERFACE:${NANOBIND_JSON_INCLUDE_DIR}>
-                           $<INSTALL_INTERFACE:include>)
+target_include_directories(
+	${PROJECT_NAME}
+    INTERFACE
+    ${PYTHON_INCLUDE_DIRS}
+    $<BUILD_INTERFACE:${NANOBIND_JSON_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
 
 #########
 # Tests #
@@ -66,8 +68,8 @@ target_include_directories(${PROJECT_NAME}
 OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 
 if(BUILD_TESTS)
-        include_directories(include)
-        nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
+    include_directories(include)
+    nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
 endif()
 
 ################
@@ -79,37 +81,51 @@ include(CMakePackageConfigHelpers)
 set(NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}" CACHE STRING "install path for nanobind_jsonConfig.cmake")
 
 # Install nanobind_json
-install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}-targets
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(
+	TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+)
 
 # Makes the project importable from the build directory
-export(EXPORT ${PROJECT_NAME}-targets
-       FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+export(
+	EXPORT ${PROJECT_NAME}-targets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+)
 
 # Configure 'nanobind_jsonConfig.cmake' for a build tree
 set(NANOBIND_JSON_CONFIG_CODE "####### Expanded from \@NANOBIND_JSON_CONFIG_CODE\@ #######\n")
 set(NANOBIND_JSON_CONFIG_CODE "${NANOBIND_JSON_CONFIG_CODE}set(CMAKE_MODULE_PATH \"${CMAKE_CURRENT_SOURCE_DIR}/cmake;\${CMAKE_MODULE_PATH}\")\n")
 set(NANOBIND_JSON_CONFIG_CODE "${NANOBIND_JSON_CONFIG_CODE}##################################################")
-configure_package_config_file(${PROJECT_NAME}Config.cmake.in
-                              "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-                              INSTALL_DESTINATION ${PROJECT_BINARY_DIR})
+configure_package_config_file(
+	${PROJECT_NAME}Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
+)
 
 # Configure 'nanobind_jsonConfig.cmake' for an install tree
 set(NANOBIND_JSON_CONFIG_CODE "")
-configure_package_config_file(${PROJECT_NAME}Config.cmake.in
-                              "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake"
-                              INSTALL_DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR})
+configure_package_config_file(
+	${PROJECT_NAME}Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR}
+)
 
 write_basic_package_version_file(
-      ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-      VERSION ${${PROJECT_NAME}_VERSION}
-      COMPATIBILITY AnyNewerVersion
-      ARCH_INDEPENDENT)
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${${PROJECT_NAME}_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    ARCH_INDEPENDENT
+)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-        DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR})
-install(EXPORT ${PROJECT_NAME}-targets
-        FILE ${PROJECT_NAME}Targets.cmake
-        DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR})
+install(
+	FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake    
+	DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR}
+)
+
+install(
+	EXPORT ${PROJECT_NAME}-targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    DESTINATION ${NANOBIND_JSON_CMAKECONFIG_INSTALL_DIR}
+)

@@ -16,7 +16,7 @@ on:
 
 jobs:
   run_tests:
-    name: Build and run tests on ${{ matrix.os }} with Python${{ matrix.python }}
+    name: Build and run tests on ${{ matrix.os }} with Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
 
     strategy:

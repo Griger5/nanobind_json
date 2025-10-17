@@ -15,6 +15,25 @@ namespace nl = nlohmann;
 void fail() { throw std::exception(); }
 
 NB_MODULE(test_json_ext, m) {
+    m.def("nljson_none_fromjson", []() {
+        return "null"_json;
+    });
+
+    m.def("nljson_none_tojson", []() {
+        nb::object obj1;
+        nb::object obj2 = nb::none();
+
+        nl::json j1 = obj1;
+        nl::json j2 = obj2;
+
+        if (!j1.is_null()) {
+            fail();
+        }
+        if (!j2.is_null()) {
+            fail();
+        }
+    });
+
     m.def("nljson_bool_fromjson", []() {
         return "false"_json;
     });

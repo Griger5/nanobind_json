@@ -27,7 +27,7 @@ namespace pyjson
             return nb::bool_(j.get<bool>());
         }
         else if (j.is_number_integer()) {
-            return nb::int_(j.get<long>());
+            return nb::int_(j.get<long long>());
         }
         else if (j.is_number_float()) {
             return nb::float_(j.get<double>());
@@ -59,7 +59,7 @@ namespace pyjson
             return nb::cast<bool>(obj);
         }
         else if (nb::isinstance<nb::int_>(obj)) {
-            return nb::cast<long>(obj);
+            return nb::cast<long long>(obj);
         }
         else if (nb::isinstance<nb::float_>(obj)) {
             return nb::cast<double>(obj);

@@ -102,4 +102,17 @@ NB_MODULE(test_json_ext, m) {
             fail();
         }
     });
+
+    m.def("nljson_string_fromjson", []() {
+        return nl::json("string from cpp");
+    });
+
+    m.def("nljson_string_tojson", [](nl::json string_json) {
+        if (!string_json.is_string()) {
+            fail();
+        }
+        else if (string_json.get<std::string>() != "string from python") {
+            fail();
+        }
+    });
 }

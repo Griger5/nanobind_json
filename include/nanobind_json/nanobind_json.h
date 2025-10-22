@@ -13,6 +13,7 @@
 #undef snprintf // required to fix an issue with std::snprintf in nlohmann::json
 #include <nlohmann/json.hpp>
 #include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 namespace nl = nlohmann;

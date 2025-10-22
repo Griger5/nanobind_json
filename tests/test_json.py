@@ -18,6 +18,7 @@ def test_nljson_none_to_json():
 def test_nljson_bool_from_json():
     json = t.nljson_bool_fromjson()
 
+    assert isinstance(json, bool)
     assert json == False
 
 def test_nljson_bool_to_json():
@@ -46,3 +47,12 @@ def test_nljson_floating_from_json():
 
 def test_nljson_floating_to_json():
     t.nljson_floating_tojson(4.5, math.inf, math.nan)
+
+def test_nljson_string_from_json():
+    json = t.nljson_string_fromjson()
+
+    assert isinstance(json, str)
+    assert json == "string from cpp"
+
+def test_nljson_string_to_json():
+    t.nljson_string_tojson("string from python")

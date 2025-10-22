@@ -2,6 +2,7 @@ build/*
 .pixi
 bld
 .DS_Store
-.venv
 **/__pycache__/
+.venv
 .pytest_cache
+build

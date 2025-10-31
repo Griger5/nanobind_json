@@ -9,6 +9,7 @@
 #pragma once
 
 #include <string>
+#include <set>
 
 #undef snprintf // required to fix an issue with std::snprintf in nlohmann::json
 #include <nlohmann/json.hpp>
@@ -18,8 +19,12 @@
 namespace nb = nanobind;
 namespace nl = nlohmann;
 
-namespace pyjson
-{
+namespace pyjson {
+    class CircularReferenceError : public std::runtime_error {
+    public:
+        CircularReferenceError(const char *msg) : std::runtime_error{msg} {}
+    };
+
     inline nb::object from_json(const nl::json &j) {
         if (j.is_null()) {
             return nb::none();
@@ -52,7 +57,7 @@ namespace pyjson
         }
     }
 
-    inline nl::json to_json(const nb::handle &obj) {
+    inline nl::json to_json(const nb::handle &obj, std::set<const PyObject *> &refs) {
         if (obj.ptr() == nullptr || obj.is_none()) {
             return nullptr;
         }
@@ -73,28 +78,48 @@ namespace pyjson
             return nb::cast<std::string>(obj);
         }
         else if (nb::isinstance<nb::tuple>(obj) || nb::isinstance<nb::list>(obj)) {
+            auto insert_ret = refs.insert(obj.ptr());
+            if (!insert_ret.second) {
+                throw CircularReferenceError("Circular reference detected");
+            }
+
             auto out = nl::json::array();
             for (const nb::handle value : obj) {
-                out.push_back(to_json(value));
+                out.push_back(to_json(value, refs));
             }
+
+            refs.erase(insert_ret.first);
+
             return out;
         }
         else if (nb::isinstance<nb::dict>(obj)) {
+            auto insert_ret = refs.insert(obj.ptr());
+            if (!insert_ret.second) {
+                throw CircularReferenceError("Circular reference detected");
+            }
+
             auto out = nl::json::object();
             for (const nb::handle key : obj) {
-                out[nb::cast<std::string>(nb::str(key))] = to_json(obj[key]);
+                out[nb::cast<std::string>(nb::str(key))] = to_json(obj[key], refs);
             }
+
+            refs.erase(insert_ret.first);
+
             return out;
         }
         else {
             throw std::runtime_error("to_json not implemented for this type of object: " + nb::cast<std::string>(nb::repr(obj)));
         }
     }
+
+    inline nl::json to_json(const nb::handle &obj) {
+        std::set<const PyObject *> refs;
+        return to_json(obj, refs);
+    }
 }
 
 // nlohmann_json serializers
-namespace nlohmann
-{
+namespace nlohmann {
     #define MAKE_NLJSON_SERIALIZER_DESERIALIZER(T)         \
     template <>                                            \
     struct adl_serializer<T> {                             \
@@ -146,10 +171,13 @@ template <> struct type_caster<nl::json> {
 public:
     NB_TYPE_CASTER(nl::json, const_name("JSON"));
 
-    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) noexcept {
+    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {
             value = pyjson::to_json(src);
             return true;
+        }
+        catch (pyjson::CircularReferenceError &e) {
+            throw e;
         }
         catch (...) {
             return false;

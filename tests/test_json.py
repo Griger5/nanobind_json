@@ -2,9 +2,6 @@ import pytest
 import sys
 import math
 
-import faulthandler
-faulthandler.enable()
-
 import test_json_ext as t
 
 def test_nljson_none_from_json():
@@ -56,3 +53,19 @@ def test_nljson_string_from_json():
 
 def test_nljson_string_to_json():
     t.nljson_string_tojson("string from python")
+
+def test_nljson_circular_reference():
+    circular_list = []
+    circular_list.append(circular_list)
+
+    circular_dict = {}
+    circular_dict["circ"] = circular_dict
+
+    with pytest.raises(RuntimeError) as e_list:
+        t.nljson_circular_reference(circular_list)
+
+    with pytest.raises(RuntimeError) as e_dict:
+        t.nljson_circular_reference(circular_dict)
+
+    assert str(e_list.value) == "Circular reference detected"
+    assert str(e_dict.value) == "Circular reference detected"

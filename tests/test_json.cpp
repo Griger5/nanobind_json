@@ -115,4 +115,8 @@ NB_MODULE(test_json_ext, m) {
             fail();
         }
     });
+
+    m.def("nljson_circular_reference", [](nl::json json) {
+        ;
+    });
 }

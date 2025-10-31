@@ -123,24 +123,36 @@ namespace nbjson {
 
 // nlohmann_json serializers
 namespace nlohmann {
-    #define MAKE_NLJSON_SERIALIZER_DESERIALIZER(T)         \
-    template <>                                            \
-    struct adl_serializer<T> {                             \
-        inline static void to_json(json &j, const T &obj) {\
-            j = nbjson::to_json<json>(obj);                      \
-        }                                                  \
-                                                           \
-        inline static T from_json(const json &j) {         \
-            return nb::cast<T>(nbjson::from_json<json>(j));      \
-        }                                                  \
+    #define MAKE_NLJSON_SERIALIZER_DESERIALIZER(T)                  \
+    template <>                                                     \
+    struct adl_serializer<T> {                                      \
+        inline static void to_json(json &j, const T &obj) {         \
+            j = nbjson::to_json<json>(obj);                         \
+        }                                                           \
+                                                                    \
+        inline static T from_json(const json &j) {                  \
+            return nb::cast<T>(nbjson::from_json<json>(j));         \
+        }                                                           \
+                                                                    \
+        inline static void to_json(ordered_json &j, const T &obj) { \
+            j = nbjson::to_json<ordered_json>(obj);                 \
+        }                                                           \
+                                                                    \
+        inline static T from_json(const ordered_json &j) {          \
+            return nb::cast<T>(nbjson::from_json<ordered_json>(j)); \
+        }                                                           \
     };
 
-    #define MAKE_NLJSON_SERIALIZER_ONLY(T)                 \
-    template <>                                            \
-    struct adl_serializer<T> {                             \
-        inline static void to_json(json &j, const T &obj) {\
-            j = nbjson::to_json<json>(obj);                      \
-        }                                                  \
+    #define MAKE_NLJSON_SERIALIZER_ONLY(T)                          \
+    template <>                                                     \
+    struct adl_serializer<T> {                                      \
+        inline static void to_json(json &j, const T &obj) {         \
+            j = nbjson::to_json<json>(obj);                         \
+        }                                                           \
+                                                                    \
+        inline static void to_json(ordered_json &j, const T &obj) { \
+            j = nbjson::to_json<ordered_json>(obj);                 \
+        }                                                           \
     };
 
     MAKE_NLJSON_SERIALIZER_DESERIALIZER(nb::object);
@@ -189,6 +201,29 @@ public:
 
     static handle from_cpp(const nl::json &src, rv_policy policy, cleanup_list *cleanup) noexcept {
         object obj = nbjson::from_json<nl::json>(src);
+        return obj.release();
+    }
+};
+
+template <> struct type_caster<nl::ordered_json> {
+public:
+    NB_TYPE_CASTER(nl::ordered_json, const_name("OrderedJSON"));
+
+    bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
+        try {
+            value = nbjson::to_json<nl::ordered_json>(src);
+            return true;
+        }
+        catch (nbjson::CircularReferenceError &e) {
+            throw e;
+        }
+        catch (...) {
+            return false;
+        }
+    }
+
+    static handle from_cpp(const nl::ordered_json &src, rv_policy policy, cleanup_list *cleanup) noexcept {
+        object obj = nbjson::from_json<nl::ordered_json>(src);
         return obj.release();
     }
 };

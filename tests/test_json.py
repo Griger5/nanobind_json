@@ -69,3 +69,18 @@ def test_nljson_circular_reference():
 
     assert str(e_list.value) == "Circular reference detected"
     assert str(e_dict.value) == "Circular reference detected"
+
+def test_nljson_ordered_from_json():
+    json = t.nljson_ordered_fromjson()
+
+    for i,key in enumerate(json.keys()):
+        assert key == f"test_{2-i}"
+
+def test_nljson_ordered_to_json():
+    test_dict = {
+        "test_2":"2",
+        "test_1":"1",
+        "test_0":"0"
+    }
+
+    t.nljson_ordered_tojson(test_dict)

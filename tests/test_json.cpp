@@ -119,4 +119,23 @@ NB_MODULE(test_json_ext, m) {
     m.def("nljson_circular_reference", [](nl::json json) {
         ;
     });
+
+    m.def("nljson_ordered_fromjson", []() {
+        nl::ordered_json ordered_json;
+        ordered_json["test_2"] = "2";
+        ordered_json["test_1"] = "1";
+        ordered_json["test_0"] = "0";
+
+        return ordered_json;
+    });
+
+    m.def("nljson_ordered_tojson", [](nl::ordered_json ordered_json) {
+        int i = 2;
+        for (auto &el : ordered_json.items()) {
+            if (el.key() != "test_" + std::to_string(i)) {
+                fail();
+            }
+            i--;
+        }
+    });
 }

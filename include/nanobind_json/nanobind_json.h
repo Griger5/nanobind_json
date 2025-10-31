@@ -25,39 +25,41 @@ namespace nbjson {
         CircularReferenceError(const char *msg) : std::runtime_error{msg} {}
     };
 
-    inline nb::object from_json(const nl::json &j) {
+    template <typename JSONType>
+    inline nb::object from_json(const JSONType &j) {
         if (j.is_null()) {
             return nb::none();
         }
         else if (j.is_boolean()) {
-            return nb::bool_(j.get<bool>());
+            return nb::bool_(j.template get<bool>());
         }
         else if (j.is_number_integer()) {
-            return nb::int_(j.get<long long>());
+            return nb::int_(j.template get<long long>());
         }
         else if (j.is_number_float()) {
-            return nb::float_(j.get<double>());
+            return nb::float_(j.template get<double>());
         }
         else if (j.is_string()) {
-            return nb::str(j.get<std::string>().c_str());
+            return nb::str(j.template get<std::string>().c_str());
         }
         else if (j.is_array()) {
             nb::list obj;
             for (const auto& el : j) {
-                obj.append(from_json(el));
+                obj.append(from_json<JSONType>(el));
             }
             return std::move(obj);
         }
         else {
             nb::dict obj;
-            for (nl::json::const_iterator it = j.cbegin(); it != j.cend(); ++it) {
-                obj[nb::str(it.key().c_str())] = from_json(it.value());
+            for (typename JSONType::const_iterator it = j.cbegin(); it != j.cend(); ++it) {
+                obj[nb::str(it.key().c_str())] = from_json<JSONType>(it.value());
             }
             return std::move(obj);
         }
     }
 
-    inline nl::json to_json(const nb::handle &obj, std::set<const PyObject *> &refs) {
+    template <typename JSONType>
+    inline JSONType to_json(const nb::handle &obj, std::set<const PyObject *> &refs) {
         if (obj.ptr() == nullptr || obj.is_none()) {
             return nullptr;
         }
@@ -83,9 +85,9 @@ namespace nbjson {
                 throw CircularReferenceError("Circular reference detected");
             }
 
-            auto out = nl::json::array();
+            auto out = JSONType::array();
             for (const nb::handle value : obj) {
-                out.push_back(to_json(value, refs));
+                out.push_back(to_json<JSONType>(value, refs));
             }
 
             refs.erase(insert_ret.first);
@@ -98,9 +100,9 @@ namespace nbjson {
                 throw CircularReferenceError("Circular reference detected");
             }
 
-            auto out = nl::json::object();
+            auto out = JSONType::object();
             for (const nb::handle key : obj) {
-                out[nb::cast<std::string>(nb::str(key))] = to_json(obj[key], refs);
+                out[nb::cast<std::string>(nb::str(key))] = to_json<JSONType>(obj[key], refs);
             }
 
             refs.erase(insert_ret.first);
@@ -112,9 +114,10 @@ namespace nbjson {
         }
     }
 
-    inline nl::json to_json(const nb::handle &obj) {
+    template <typename JSONType>
+    inline JSONType to_json(const nb::handle &obj) {
         std::set<const PyObject *> refs;
-        return to_json(obj, refs);
+        return to_json<JSONType>(obj, refs);
     }
 } // nbjson
 
@@ -124,11 +127,11 @@ namespace nlohmann {
     template <>                                            \
     struct adl_serializer<T> {                             \
         inline static void to_json(json &j, const T &obj) {\
-            j = nbjson::to_json(obj);                      \
+            j = nbjson::to_json<json>(obj);                      \
         }                                                  \
                                                            \
         inline static T from_json(const json &j) {         \
-            return nb::cast<T>(nbjson::from_json(j));      \
+            return nb::cast<T>(nbjson::from_json<json>(j));      \
         }                                                  \
     };
 
@@ -136,7 +139,7 @@ namespace nlohmann {
     template <>                                            \
     struct adl_serializer<T> {                             \
         inline static void to_json(json &j, const T &obj) {\
-            j = nbjson::to_json(obj);                      \
+            j = nbjson::to_json<json>(obj);                      \
         }                                                  \
     };
 
@@ -173,7 +176,7 @@ public:
 
     bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {
-            value = nbjson::to_json(src);
+            value = nbjson::to_json<nl::json>(src);
             return true;
         }
         catch (nbjson::CircularReferenceError &e) {
@@ -185,7 +188,7 @@ public:
     }
 
     static handle from_cpp(const nl::json &src, rv_policy policy, cleanup_list *cleanup) noexcept {
-        object obj = nbjson::from_json(src);
+        object obj = nbjson::from_json<nl::json>(src);
         return obj.release();
     }
 };

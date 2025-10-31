@@ -19,7 +19,7 @@
 namespace nb = nanobind;
 namespace nl = nlohmann;
 
-namespace pyjson {
+namespace nbjson {
     class CircularReferenceError : public std::runtime_error {
     public:
         CircularReferenceError(const char *msg) : std::runtime_error{msg} {}
@@ -116,7 +116,7 @@ namespace pyjson {
         std::set<const PyObject *> refs;
         return to_json(obj, refs);
     }
-}
+} // nbjson
 
 // nlohmann_json serializers
 namespace nlohmann {
@@ -124,11 +124,11 @@ namespace nlohmann {
     template <>                                            \
     struct adl_serializer<T> {                             \
         inline static void to_json(json &j, const T &obj) {\
-            j = pyjson::to_json(obj);                      \
+            j = nbjson::to_json(obj);                      \
         }                                                  \
                                                            \
         inline static T from_json(const json &j) {         \
-            return nb::cast<T>(pyjson::from_json(j));      \
+            return nb::cast<T>(nbjson::from_json(j));      \
         }                                                  \
     };
 
@@ -136,7 +136,7 @@ namespace nlohmann {
     template <>                                            \
     struct adl_serializer<T> {                             \
         inline static void to_json(json &j, const T &obj) {\
-            j = pyjson::to_json(obj);                      \
+            j = nbjson::to_json(obj);                      \
         }                                                  \
     };
 
@@ -161,7 +161,7 @@ namespace nlohmann {
 
     #undef MAKE_NLJSON_SERIALIZER_DESERIALIZER
     #undef MAKE_NLJSON_SERIALIZER_ONLY
-}
+} // nlohmann
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
@@ -173,10 +173,10 @@ public:
 
     bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {
-            value = pyjson::to_json(src);
+            value = nbjson::to_json(src);
             return true;
         }
-        catch (pyjson::CircularReferenceError &e) {
+        catch (nbjson::CircularReferenceError &e) {
             throw e;
         }
         catch (...) {
@@ -185,7 +185,7 @@ public:
     }
 
     static handle from_cpp(const nl::json &src, rv_policy policy, cleanup_list *cleanup) noexcept {
-        object obj = pyjson::from_json(src);
+        object obj = nbjson::from_json(src);
         return obj.release();
     }
 };

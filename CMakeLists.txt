@@ -19,25 +19,7 @@ set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_V
 # Dependencies #
 ################
 
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
-
-include(FetchContent)
-        
-FetchContent_Declare(
-    nanobind
-    GIT_REPOSITORY https://github.com/wjakob/nanobind.git
-    GIT_TAG master
-)
-
-FetchContent_Declare(
-    nlohmann_json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG master
-)
-
-FetchContent_MakeAvailable(nanobind nlohmann_json)
-
-include_directories(build/_deps/nlohmann_json-src/include)
+find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
 
 ##########
 # Target #
@@ -65,11 +47,10 @@ target_include_directories(
 # Tests #
 #########
 
-OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
+OPTION(NBJSON_TEST "nanobind_json test suite" OFF)
 
-if(BUILD_TESTS)
-    include_directories(include)
-    nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
+if(NBJSON_TEST)
+    add_subdirectory(tests)
 endif()
 
 ################

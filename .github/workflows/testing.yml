@@ -47,11 +47,11 @@ jobs:
     - name: Run tests
       if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
-        cd build/
-        python -m pytest ../tests
+        cd tests/
+        python -m pytest .
 
     - name: Run tests
       if: ${{ startsWith(matrix.os, 'windows') }}
       run: |
-        cd build/Debug
-        python -m pytest ../../tests
+        cd tests/Debug
+        python -m pytest .

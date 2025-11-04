@@ -54,6 +54,20 @@ def test_nljson_string_from_json():
 def test_nljson_string_to_json():
     t.nljson_string_tojson("string from python")
 
+def test_nljson_list_from_json():
+    json = t.nljson_list_fromjson()
+
+    assert isinstance(json, list)
+    assert json[0] == 1234
+    assert json[1] == "Hello, World!"
+    assert json[2] == False
+
+def test_nljson_list_to_json():
+    t.nljson_list_tojson([1234, "Hello, World!", False], [])
+
+def test_nljson_tuple_to_json():
+    t.nljson_tuple_tojson((1234, "Hello, World!", False))
+
 def test_nljson_circular_reference():
     circular_list = []
     circular_list.append(circular_list)

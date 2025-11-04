@@ -116,6 +116,47 @@ NB_MODULE(test_json_ext, m) {
         }
     });
 
+    m.def("nljson_list_fromjson", []() {
+        return "[1234, \"Hello, World!\", false]"_json;
+    });
+
+    m.def("nljson_list_tojson", [](nl::json list_json, nl::json empty_list_json) {
+        if (!list_json.is_array()) {
+            fail();
+        }
+        else if (list_json[0].get<int>() != 1234) {
+            fail();
+        }
+        else if (list_json[1].get<std::string>() != "Hello, World!") {
+            fail();
+        }
+        else if (list_json[2].get<bool>() != false) {
+            fail();
+        }
+
+        if (!empty_list_json.is_array()) {
+            fail();
+        }
+        else if (!empty_list_json.empty()) {
+            fail();
+        }
+    });
+
+    m.def("nljson_tuple_tojson", [](nl::json tuple_json) {
+        if (!tuple_json.is_array()) {
+            fail();
+        }
+        else if (tuple_json[0].get<int>() != 1234) {
+            fail();
+        }
+        else if (tuple_json[1].get<std::string>() != "Hello, World!") {
+            fail();
+        }
+        else if (tuple_json[2].get<bool>() != false) {
+            fail();
+        }
+    });
+
     m.def("nljson_circular_reference", [](nl::json json) {
         ;
     });

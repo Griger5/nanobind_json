@@ -210,6 +210,16 @@ NB_MODULE(test_json_ext, m) {
         }
     });
 
+    m.def("nljson_handle_tojson", [](nb::object obj) {
+        for (nb::handle handle : obj) {
+            nl::json j = handle;
+
+            if (!(j.is_array() || j.is_object() || j.is_string() || j.is_null())) {
+                fail();
+            }
+        }
+    });
+
     m.def("nljson_circular_reference", [](nl::json json) {
         ;
     });

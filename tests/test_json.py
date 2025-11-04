@@ -105,6 +105,15 @@ def test_nljson_nested_to_json():
 
     t.nljson_nested_tojson(json)
 
+def test_nljson_handle_to_json():
+    py_object = []
+    py_object.append((1234, "abc", False))
+    py_object.append({"a":3, "b":5})
+    py_object.append("hello")
+    py_object.append(None)
+
+    t.nljson_handle_tojson(py_object)
+
 def test_nljson_circular_reference():
     circular_list = []
     circular_list.append(circular_list)

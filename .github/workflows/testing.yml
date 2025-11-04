@@ -38,7 +38,7 @@ jobs:
       run: python -m pip install pytest
     
     - name: Configure CMake
-      run: cmake -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build/ -DBUILD_TESTS=1
+      run: cmake -S $GITHUB_WORKSPACE -B $GITHUB_WORKSPACE/build/ -DNBJSON_TEST=1
 
     - name: Build test modules
       run: cmake --build $GITHUB_WORKSPACE/build/
@@ -46,11 +46,11 @@ jobs:
     - name: Run tests
       if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
-        cd build/
-        python -m pytest ../tests
+        cd build/tests/
+        python -m pytest ../../tests
 
     - name: Run tests
       if: ${{ startsWith(matrix.os, 'windows') }}
       run: |
-        cd build/Debug
-        python -m pytest ../../tests
+        cd build/tests/Debug
+        python -m pytest ../../../tests

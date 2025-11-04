@@ -157,6 +157,59 @@ NB_MODULE(test_json_ext, m) {
         }
     });
 
+    m.def("nljson_dict_fromjson", []() {
+        return "{\"a\": 1234, \"b\":\"Hello, World!\", \"c\":false}"_json;
+    });
+
+    m.def("nljson_dict_tojson", [](nl::json dict_json, nl::json empty_dict_json) {
+        if (!dict_json.is_object()) {
+            fail();
+        }
+        else if (dict_json["a"].get<int>() != 1234) {
+            fail();
+        }
+        else if (dict_json["b"].get<std::string>() != "Hello, World!") {
+            fail();
+        }
+        else if (dict_json["c"].get<bool>() != false) {
+            fail();
+        }
+
+        if (!empty_dict_json.is_object()) {
+            fail();
+        }
+        else if (!empty_dict_json.empty()) {
+            fail();
+        }
+    });
+
+    m.def("nljson_nested_fromjson", []() {
+        return R"({
+            "baz": ["one", "two", "three"],
+            "foo": 1,
+            "bar": {"a": 36, "b": false},
+            "hey": null
+            })"_json;
+    });
+
+    m.def("nljson_nested_tojson", [](nl::json json) {
+        if (!json.is_object()) {
+            fail();
+        }
+        else if (json["baz"][0].get<std::string>() != "one" || json["baz"][1].get<std::string>() != "two" || json["baz"][2].get<std::string>() != "three") {
+            fail();
+        }
+        else if (json["foo"].get<int>() != 1) {
+            fail();
+        }
+        else if (json["bar"]["a"].get<int>() != 36 || json["bar"]["b"].get<bool>() != false) {
+            fail();
+        }
+        else if (!json["hey"].is_null()) {
+            fail();
+        }
+    });
+
     m.def("nljson_circular_reference", [](nl::json json) {
         ;
     });

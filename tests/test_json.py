@@ -68,6 +68,43 @@ def test_nljson_list_to_json():
 def test_nljson_tuple_to_json():
     t.nljson_tuple_tojson((1234, "Hello, World!", False))
 
+def test_nljson_dict_from_json():
+    json = t.nljson_dict_fromjson()
+
+    assert isinstance(json, dict)
+    assert json["a"] == 1234
+    assert json["b"] == "Hello, World!"
+    assert json["c"] == False
+
+def test_nljson_dict_to_json():
+    t.nljson_dict_tojson({"a":1234, "b":"Hello, World!", "c":False}, {})
+
+def test_nljson_nested_from_json():
+    json = t.nljson_nested_fromjson()
+
+    assert isinstance(json, dict)
+    assert isinstance(json["baz"], list)
+    assert isinstance(json["foo"], int)
+    assert isinstance(json["bar"], dict)
+
+    assert json["baz"][0] == "one"
+    assert json["baz"][1] == "two"
+    assert json["baz"][2] == "three"
+    assert json["foo"] == 1
+    assert json["bar"]["a"] == 36
+    assert json["bar"]["b"] == False
+    assert json["hey"] == None
+
+def test_nljson_nested_to_json():
+    json = {
+        "baz": ["one", "two", "three"],
+        "foo": 1,
+        "bar": {"a": 36, "b": False},
+        "hey": None
+    }
+
+    t.nljson_nested_tojson(json)
+
 def test_nljson_circular_reference():
     circular_list = []
     circular_list.append(circular_list)

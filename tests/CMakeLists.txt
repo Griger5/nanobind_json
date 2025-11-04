@@ -1,3 +1,5 @@
+find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
+
 include(FetchContent)
         
 FetchContent_Declare(

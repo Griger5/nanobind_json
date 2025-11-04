@@ -167,12 +167,6 @@ namespace nlohmann {
     MAKE_NLJSON_SERIALIZER_DESERIALIZER(nb::dict);
 
     MAKE_NLJSON_SERIALIZER_ONLY(nb::handle);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::item_accessor);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::list_accessor);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::tuple_accessor);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::sequence_accessor);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::str_attr_accessor);
-    // MAKE_NLJSON_SERIALIZER_ONLY(nb::detail::obj_attr_accessor);
 
     #undef MAKE_NLJSON_SERIALIZER_DESERIALIZER
     #undef MAKE_NLJSON_SERIALIZER_ONLY

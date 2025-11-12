@@ -1,31 +1,43 @@
-![Tests](https://github.com/nanobind/nanobind_json/workflows/Tests/badge.svg)
+# nanobind_json
 
-# nanobind11_json
-`nanobind11_json` is an `nlohmann::json` to `nanobind` bridge, it allows you to automatically convert `nlohmann::json` to `py::object` and the other way around. Simply include the header, and the automatic conversion will be enabled.
+`nanobind11_json` is an `nlohmann::json` to `nanobind` bridge, it allows you to automatically convert `nlohmann::json` to `nb::object` and the other way around. Simply include the header, and the automatic conversion will be enabled.
 
-This library is derived from that of `pybind11_json` and therefore follows the same BSD license. Contributions and translations were made by a Federal employee and are not subject to US Copyright protection.
+The library has been tested on Linux, macOS, Windows and Linux-ARM on Python versions >3.8 with the help of Github Actions.
 
-## Warnings
+![](https://img.shields.io/github/actions/workflow/status/Griger5/nanobind_json/testing.yml?logo=Github%20Actions&label=Tests) [![Linux OK](https://img.shields.io/static/v1?label=Linux&logo=Linux&color=yellow&message=%E2%9C%93)](https://en.wikipedia.org/wiki/Linux) [![Linux-ARM OK](https://img.shields.io/static/v1?label=Linux-ARM&logo=Linux&color=yellow&message=%E2%9C%93)](https://en.wikipedia.org/wiki/Linux) [![macOS OK](https://img.shields.io/static/v1?label=macOS&logo=Apple&color=silver&message=%E2%9C%93)](https://en.wikipedia.org/wiki/macOS) [![Windows OK](https://img.shields.io/static/v1?label=Windows&logo=Windows&color=blue&message=%E2%9C%93)](https://en.wikipedia.org/wiki/Windows)
 
-Due to some changes between `pybind11` and `nanobind`, some features (most notably the tests, which rely on the embed mode), have not been re-implemented. Recommend to use this library as a header-only via a git submodule for now.
+> [!TIP]
+> Looking for an equivalent with pybind11? Check this out https://github.com/pybind/pybind11_json !
 
-## C++ API: Automatic conversion between `nlohmann::json` and `pybind11` Python objects
+## Dependencies
+
+``nanobind_json`` depends on
+
+- [nanobind](https://github.com/wjakob/nanobind)
+- [nlohmann_json](https://github.com/nlohmann/json)
+
+| `nanobind_json` | `nlohmann_json` | `nanobind` |
+| ----------------- | ----------------- | ------------ |
+| master            | >=3.2.0           | >=2.2.0      |
+
+## C++ API: Automatic conversion between `nlohmann::json` and `nanobind` Python objects
 
 ```cpp
-#include "nanobind_json/nanobind_json.hpp"
+#include "nanobind_json/nanobind_json.h"
 
 namespace nb = nanobind;
 namespace nl = nlohmann;
-using namespace nanobind::literals;
 
-py::dict obj = py::dict("number"_a=1234, "hello"_a="world");
+nb::dict obj;
+obj["number"] = 1234;
+obj["hello"] = "world";
 
 // Automatic py::dict->nl::json conversion
 nl::json j = obj;
 
-// Automatic nl::json->py::object conversion
+// Automatic nl::json->nb::object conversion
 nb::object result1 = j;
-// Automatic nl::json->py::dict conversion
+// Automatic nl::json->nb::dict conversion
 nb::dict result2 = j;
 ```
 
@@ -33,11 +45,11 @@ nb::dict result2 = j;
 
 You can easily make bindings for C++ classes/functions that make use of `nlohmann::json`.
 
-For example, making a binding for the following two functions is automatic, thanks to `nanobind_json`
+For example, making a binding for the following two functions is automatic, thanks to `nanobind_json`:
 
 ```cpp
 void take_json(const nlohmann::json& json) {
-    std::cout << "This function took an nlohmann::json instance as argument: " << s << std::endl;
+    std::cout << "This function took an nlohmann::json instance as argument: " << json << std::endl;
 }
 
 nlohmann::json return_json() {
@@ -71,66 +83,27 @@ j = my_module.return_json()
 print(j)
 ```
 
-# Installation
+## Using the library in your project
 
-TODO: not yet implemented; PR welcome
+Since the library is header-only, the easiest way to use it in your project is to simply download the "nanobind_json.h" file into your project directory. Another way is adding `nanobind_json` as a **git submodule**.
 
-## Using conda
+*NOTE: You need both `nlohmann_json` and `nanobind` also available in your project. It is recommended to add all three libraries as git submodules*.
 
-You can install `nanobind_json` using conda
+## Tests
 
-```bash
-conda install -c conda-forge nanobind nlohmann_json nanobind_json
-```
-
-## From sources
-
-We encourage you to use conda for installing dependencies, but it is not a requirement for `nanobind_json` to work
+To build and run the tests, simply do the following:
 
 ```bash
-conda install cmake nlohmann_json nanobind -c conda-forge
+cmake -S . -B build/ -DNBJSON_TEST=1
+cmake --build build/
+cd build/tests/
+python -m pytest -s -vv ../../tests/
 ```
 
-Then you can install the sources
+If `nanobind` and `nlohmann_json` CMake packages are not found they will be downloaded through CMake's `FetchContent`.
 
-```bash
-cmake -D CMAKE_INSTALL_PREFIX=your_conda_path
-make install
-```
+## License
 
-## Header only usage
-Download the "nanobind_json.hpp" single file into your project, and install/download `nanobind` and `nlohmann_json` or use as git submodule.
-
-
-## Run tests
-
-TODO: not yet implemented because nanobind has dropped embed mode; PR fixing the tests is welcomed
-TODO: nanobind cmake packages are not automatically found when importing CMake
-
-You can compile and run tests locally doing
-
-```bash
-cmake -D CMAKE_INSTALL_PREFIX=$CONDA_PREFIX -D DOWNLOAD_GTEST=ON ..
-make
-./test/test_nanobind_json
-```
-
-# Dependencies
-
-``nanobind_json`` depends on
-
- - [nanobind](https://github.com/wjakob/nanobind)
- - [nlohmann_json](https://github.com/nlohmann/json)
-
-
-| `nanobind_json`| `nlohmann_json` | `nanobind`      |
-|----------------|-----------------|-----------------|
-|  master        | >=3.2.0,<4.0    | >=2.2.0,<3.0    |
-
-
-# License
-
-We use a shared copyright model that enables all contributors to maintain the
-copyright on their contributions.
+We use a shared copyright model that enables all contributors to maintain the copyright on their contributions.
 
 This software is licensed under the BSD-3-Clause license. See the [LICENSE](LICENSE) file for details.

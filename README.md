@@ -1,6 +1,6 @@
 # nanobind_json
 
-`nanobind11_json` is an `nlohmann::json` to `nanobind` bridge, it allows you to automatically convert `nlohmann::json` to `nb::object` and the other way around. Simply include the header, and the automatic conversion will be enabled.
+`nanobind_json` is an `nlohmann::json` to `nanobind` bridge, it allows you to automatically convert `nlohmann::json` to `nb::object` and the other way around. Simply include the header, and the automatic conversion will be enabled.
 
 The library has been tested on Linux, macOS, Windows and Linux-ARM on Python versions >3.8 with the help of Github Actions.
 

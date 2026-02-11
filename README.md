@@ -32,7 +32,7 @@ nb::dict obj;
 obj["number"] = 1234;
 obj["hello"] = "world";
 
-// Automatic py::dict->nl::json conversion
+// Automatic nb::dict->nl::json conversion
 nl::json j = obj;
 
 // Automatic nl::json->nb::object conversion
@@ -48,7 +48,7 @@ You can easily make bindings for C++ classes/functions that make use of `nlohman
 For example, making a binding for the following two functions is automatic, thanks to `nanobind_json`:
 
 ```cpp
-void take_json(const nlohmann::json& json) {
+void take_json(const nlohmann::json &json) {
     std::cout << "This function took an nlohmann::json instance as argument: " << json << std::endl;
 }
 

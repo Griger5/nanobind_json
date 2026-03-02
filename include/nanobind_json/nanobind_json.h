@@ -44,17 +44,17 @@ namespace nbjson {
         }
         else if (j.is_array()) {
             nb::list obj;
-            for (const auto& el : j) {
+            for (const auto &el : j) {
                 obj.append(from_json<JSONType>(el));
             }
-            return std::move(obj);
+            return obj;
         }
         else {
             nb::dict obj;
             for (typename JSONType::const_iterator it = j.cbegin(); it != j.cend(); ++it) {
                 obj[nb::str(it.key().c_str())] = from_json<JSONType>(it.value());
             }
-            return std::move(obj);
+            return obj;
         }
     }
 
@@ -178,7 +178,7 @@ NAMESPACE_BEGIN(detail)
 // nanobind caster
 template <> struct type_caster<nl::json> {
 public:
-    NB_TYPE_CASTER(nl::json, const_name("JSON"));
+    NB_TYPE_CASTER(nl::json, const_name("JSON"))
 
     bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {
@@ -201,7 +201,7 @@ public:
 
 template <> struct type_caster<nl::ordered_json> {
 public:
-    NB_TYPE_CASTER(nl::ordered_json, const_name("OrderedJSON"));
+    NB_TYPE_CASTER(nl::ordered_json, const_name("OrderedJSON"))
 
     bool from_python(handle src, uint8_t flags, cleanup_list *cleanup) {
         try {

@@ -141,7 +141,7 @@ namespace nlohmann {
         inline static T from_json(const ordered_json &j) {          \
             return nb::cast<T>(nbjson::from_json<ordered_json>(j)); \
         }                                                           \
-    };
+    }
 
     #define MAKE_NLJSON_SERIALIZER_ONLY(T)                          \
     template <>                                                     \
@@ -153,7 +153,7 @@ namespace nlohmann {
         inline static void to_json(ordered_json &j, const T &obj) { \
             j = nbjson::to_json<ordered_json>(obj);                 \
         }                                                           \
-    };
+    }
 
     MAKE_NLJSON_SERIALIZER_DESERIALIZER(nb::object);
 

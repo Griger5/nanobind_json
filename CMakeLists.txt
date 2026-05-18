@@ -44,11 +44,11 @@ include_directories(build/_deps/nlohmann_json-src/include)
 set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 
-if (NOT TARGET nanobind::headers)
+# if (NOT TARGET nanobind::headers)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
-endif()
-if (NOT TARGET nlohmann_json)
-endif()
+# endif()
+# if (NOT TARGET nlohmann_json)
+# endif()
 
 ##########
 # Target #
@@ -86,7 +86,9 @@ OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 
 if(BUILD_TESTS)
         include_directories(include)
-        nanobind_add_module(_test_json_ext tests/test_json.cpp STABLE_ABI)
+        nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
+        target_link_libraries(test_json_ext PRIVATE ${PROJECT_NAME} nanobind-static nlohmann_json ${PYTHON_INCLUDE_DIRS})
+        target_include_directories(test_json_ext PUBLIC ${PYTHON_INCLUDE_DIRS})
 endif()
 
 ################

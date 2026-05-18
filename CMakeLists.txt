@@ -59,7 +59,7 @@ if(NOT nanobind_FOUND)
         GIT_TAG master
     )
     FetchContent_MakeAvailable(nanobind)
-    include_directories(../build/_deps/nanobind-src/include)
+    include_directories(build/_deps/nanobind-src/include)
 endif()
 
 if(NOT nlohmann_json_FOUND)
@@ -69,13 +69,13 @@ if(NOT nlohmann_json_FOUND)
         GIT_TAG master
     )
     FetchContent_MakeAvailable(nlohmann_json)
-    include_directories(../build/_deps/nlohmann_json-src/include)
+    include_directories(build/_deps/nlohmann_json-src/include)
 endif()
 
 find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
 
-include_directories(../include)
-nanobind_add_module(test_json_ext test_json.cpp STABLE_ABI)
+include_directories(include)
+nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
 
 ################
 # Installation #

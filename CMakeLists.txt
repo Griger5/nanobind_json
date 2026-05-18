@@ -29,13 +29,13 @@ set(NANOBIND_JSON_HEADERS
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-# target_include_directories(
-# 	${PROJECT_NAME}
-#     INTERFACE
-#     ${PYTHON_INCLUDE_DIRS}
-#     $<BUILD_INTERFACE:${NANOBIND_JSON_INCLUDE_DIR}>
-#     $<INSTALL_INTERFACE:include>
-# )
+target_include_directories(
+	${PROJECT_NAME}
+    INTERFACE
+    ${PYTHON_INCLUDE_DIRS}
+    $<BUILD_INTERFACE:${NANOBIND_JSON_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
 
 #########
 # Tests #
@@ -46,14 +46,6 @@ OPTION(NBJSON_TEST "nanobind_json test suite" OFF)
 if(NBJSON_TEST)
     add_subdirectory(tests)
 endif()
-
-target_include_directories(
-	${PROJECT_NAME}
-    INTERFACE
-    ${PYTHON_INCLUDE_DIRS}
-    $<BUILD_INTERFACE:${NANOBIND_JSON_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
 
 ################
 # Installation #

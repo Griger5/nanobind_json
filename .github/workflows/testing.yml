@@ -46,9 +46,6 @@ jobs:
         ls
         ls build
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-
     - name: Run tests
       run: |
         cd build/Release

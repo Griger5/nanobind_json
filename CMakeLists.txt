@@ -15,6 +15,10 @@ set(${PROJECT_NAME}_VERSION_MINOR 0)
 set(${PROJECT_NAME}_VERSION_PATCH 1)
 set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH})
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CONFIGURATION_TYPES Release)
+
 ################
 # Dependencies #
 ################
@@ -82,7 +86,7 @@ OPTION(BUILD_TESTS "nanobind_json test suite" OFF)
 
 if(BUILD_TESTS)
         include_directories(include)
-        nanobind_add_module(test_json_ext tests/test_json.cpp STABLE_ABI)
+        nanobind_add_module(_test_json_ext tests/test_json.cpp STABLE_ABI)
 endif()
 
 ################

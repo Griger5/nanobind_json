@@ -23,6 +23,8 @@ set(CMAKE_CONFIGURATION_TYPES Release)
 # Dependencies #
 ################
 
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+
 include(FetchContent)
         
 FetchContent_Declare(
@@ -45,7 +47,7 @@ set(nanobind_REQUIRED_VERSION 2.2.0)
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 
 # if (NOT TARGET nanobind::headers)
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+# find_package(Python COMPONENTS Interpreter Development REQUIRED)
 # endif()
 # if (NOT TARGET nlohmann_json)
 # endif()

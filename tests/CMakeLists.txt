@@ -1,5 +1,3 @@
-find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
-
 include(FetchContent)
 
 find_package(nanobind)
@@ -24,6 +22,8 @@ if(NOT nlohmann_json_FOUND)
     FetchContent_MakeAvailable(nlohmann_json)
     include_directories(../build/_deps/nlohmann_json-src/include)
 endif()
+
+find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
 
 include_directories(../include)
 nanobind_add_module(test_json_ext test_json.cpp STABLE_ABI)
